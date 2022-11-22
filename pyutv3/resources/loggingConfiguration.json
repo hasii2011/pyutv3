@@ -1,0 +1,54 @@
+{
+    "version": 1,
+    "disable_existing_loggers": "False",
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        },
+        "pyutSimple": {
+            "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s: %(message)s",
+            "datefmt" : "%H:%M:%S"
+        },
+         "functionNames": {
+            "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s.%(funcName)s() %(message)s",
+            "datefmt" : "%H:%M:%S"
+        }
+    },
+    "handlers": {
+        "consoleHandler": {
+            "class":     "logging.StreamHandler",
+            "formatter": "pyutSimple",
+            "stream":     "ext://sys.stdout"
+        },
+        "consoleHandlerFunctionNames": {
+            "class": "logging.StreamHandler",
+            "formatter": "functionNames",
+            "stream": "ext://sys.stdout"
+        },
+
+        "rotatingFileHandler": {
+            "class": "logging.handlers.logging.handlers.RotatingFileHandler",
+            "formatter": "pyutSimple",
+            "filename": "/tmp/pyutv3.log",
+            "mode": "a",
+            "maxBytes": 20480,
+            "backupCount": 5,
+            "encoding": "utf-8"
+        }
+    },
+    "loggers": {
+        "root": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "PyutV3": {
+            "level":     "INFO",
+            "propagate": "False"
+        },
+        "pyutV3": {
+            "level":     "INFO",
+            "propagate": "False"
+        }
+    }
+}
