@@ -1,0 +1,7 @@
+.idea/
+__pycache__/
+.DS_Store
+/html/
+build/
+dist/
+/venv-3.10.6/
