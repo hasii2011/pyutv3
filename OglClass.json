@@ -1,0 +1,39 @@
+{
+    "graphicClass": {
+        "height": 60,
+        "width": 120,
+        "x": 120,
+        "y": 240
+    },
+    "modelClass": {
+        "description": "Soy Gato",
+        "displayParameters": "Display",
+        "displayStereoType": true,
+        "fields": [
+            {
+                "defaultValue": "gato",
+                "name": "protectedField",
+                "type": "str",
+                "visibility": "#"
+            },
+            {
+                "defaultValue": "6666",
+                "name": "privateField",
+                "type": "int",
+                "visibility": "-"
+            },
+            {
+                "defaultValue": "23.0",
+                "name": "publicField",
+                "type": "float",
+                "visibility": "+"
+            }
+        ],
+        "fileName": "/tmp/TheBox.txt",
+        "id": 23,
+        "name": "Ozzee",
+        "showFields": false,
+        "showMethods": true,
+        "stereotype": "model"
+    }
+}

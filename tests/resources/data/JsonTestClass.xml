@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<PyutProject version="7.0.0+.1309" CodePath="">
+    <PyutDocument type="CLASS_DIAGRAM" title="Class Diagram" scrollPositionX="0" scrollPositionY="0" pixelsPerUnitX="72" pixelsPerUnitY="72">
+        <GraphicClass width="190" height="110" x="475" y="158">
+            <Class id="24" name="JsonClass" stereotype="model" filename="" description="" showMethods="True" showFields="True" showStereotype="True" displayParameters="Unspecified">
+                <Field visibility="PROTECTED">
+                    <Param name="protectedField" type="str" defaultValue="gato"/>
+                </Field>
+                <Field visibility="PRIVATE">
+                    <Param name="privateField" type="int" defaultValue="0"/>
+                </Field>
+                <Field visibility="PUBLIC">
+                    <Param name="publicField" type="float" defaultValue="23.0"/>
+                </Field>
+            </Class>
+        </GraphicClass>
+    </PyutDocument>
+</PyutProject>
