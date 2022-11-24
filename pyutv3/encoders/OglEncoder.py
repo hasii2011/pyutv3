@@ -26,19 +26,21 @@ EncodedGraphicClass = NewType('EncodedGraphicClass', Dict[str, int])
 EncodedField  = NewType('EncodedField',  Dict[str, str])
 EncodedFields = NewType('EncodedFields', List[EncodedField])
 
-EncodedMethod  = NewType('EncodedMethod',  Dict[str, str])
-EncodedMethods = NewType('EncodedMethods', List[EncodedMethod])
-
-EncodedModifier  = NewType('EncodedModifier',   Dict[str, str])
+EncodedModifier  = NewType('EncodedModifier',  Dict[str, str])
 EncodedModifiers = NewType('EncodedModifiers', List[EncodedModifier])
-
-EncodedSourceLine = NewType('EncodedSourceLine', Dict[str, str])
-EncodedSourceCode = NewType('EncodedSourceCode', List[EncodedSourceLine])
 
 EncodedParameter  = NewType('EncodedParameter',  Dict[str, str])
 EncodedParameters = NewType('EncodedParameters', List[EncodedParameter])
 
-ModelValueTypes = Union[int, str, float, bool, EncodedFields]
+EncodedSourceLine = NewType('EncodedSourceLine', Dict[str, str])
+EncodedSourceCode = NewType('EncodedSourceCode', List[EncodedSourceLine])
+
+MethodValueTypes = Union[str, EncodedModifiers, EncodedParameters, EncodedSourceCode]
+
+EncodedMethod  = NewType('EncodedMethod',  Dict[str, MethodValueTypes])
+EncodedMethods = NewType('EncodedMethods', List[EncodedMethod])
+
+ModelValueTypes = Union[int, str, float, bool, EncodedFields, EncodedMethods]
 EncodedModel    = NewType('EncodedModel', Dict[str, ModelValueTypes])
 
 Serializable  = Union[OglObject, OglLink, OglInterface2]
@@ -196,12 +198,12 @@ class OglClassEncoder(JSONEncoder):
     def _encodeSourceCode(self, sourceCode: SourceCode) -> EncodedSourceCode:
         encodedSourceCode: EncodedSourceCode = EncodedSourceCode([])
         for code in sourceCode:
-            encodedLine = self._encodeCodeLine(code)
+            encodedLine: EncodedSourceLine = self._encodeCodeLine(code)
             encodedSourceCode.append(encodedLine)
 
         return encodedSourceCode
 
-    def _encodeCodeLine(self, codeLine: str):
+    def _encodeCodeLine(self, codeLine: str) -> EncodedSourceLine:
         return EncodedSourceLine({
             'code': codeLine
         })

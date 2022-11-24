@@ -1,8 +1,10 @@
 
-import json
-
 import logging
 import logging.config
+
+from os import system as osSystem
+
+import json
 
 from unittest import TestCase
 
@@ -26,10 +28,9 @@ class DummyApp(App):
 class TestBase(TestCase):
 
     RESOURCES_PACKAGE_NAME:                   str = 'tests.resources'
-    RESOURCES_TEST_CLASSES_PACKAGE_NAME:      str = 'tests.resources.testclass'
-    RESOURCES_TEST_JAVA_CLASSES_PACKAGE_NAME: str = 'tests.resources.testclass.ozzee'
-    RESOURCES_TEST_DATA_PACKAGE_NAME:         str = 'tests.resources.testdata'
-    RESOURCES_TEST_IMAGES_PACKAGE_NAME:       str = 'tests.resources.testimages'
+    RESOURCES_TEST_FILES_PACKAGE_NAME:        str = f'{RESOURCES_PACKAGE_NAME}.testfiles'
+
+    EXTERNAL_DIFF_PROGRAM:    str = 'diff'
 
     def setUp(self):
         self._app:   DummyApp = DummyApp()
@@ -65,3 +66,14 @@ class TestBase(TestCase):
         fqFileName = resource_filename(TestBase.RESOURCES_PACKAGE_NAME, JSON_LOGGING_CONFIG_FILENAME)
 
         return fqFileName
+
+    def _getFullyQualifiedTestFilePath(self, testFileName: str) -> str:
+
+        fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_FILES_PACKAGE_NAME, testFileName)
+        return fqFileName
+
+    def _runDiff(self, expectedContentsFileName: str, actualContentsFileName) -> int:
+
+        status: int = osSystem(f'{TestBase.EXTERNAL_DIFF_PROGRAM} {expectedContentsFileName} {actualContentsFileName}')
+
+        return status

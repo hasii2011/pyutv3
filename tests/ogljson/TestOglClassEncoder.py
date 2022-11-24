@@ -4,6 +4,9 @@ from logging import Logger
 from logging import getLogger
 
 import json
+
+from pathlib import Path
+
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutDisplayParameters import PyutDisplayParameters
 from pyutmodel.PyutField import PyutField
@@ -25,6 +28,12 @@ from unittest import main as unitTestMain
 
 from pyutv3.encoders.OglEncoder import OglClassEncoder
 from tests.TestBase import TestBase
+
+BASE_NAME:  str = 'OglClass'
+SUFFIX:     str = 'json'
+
+GENERATED_OGL_CLASS_FILENAME: str = f'{BASE_NAME}.{SUFFIX}'
+EXPECTED__OGL_CLASS_FILENAME: str = f'Expected-{BASE_NAME}.{SUFFIX}'
 
 
 class TestOglClassEncoder(TestBase):
@@ -56,10 +65,17 @@ class TestOglClassEncoder(TestBase):
 
         # Sort keys so we can verify them
         oglClassStr = json.dumps(oglClass, cls=OglClassEncoder, indent=4, sort_keys=False)
-        self.logger.info(f'{oglClassStr=}')
+        self.logger.debug(f'{oglClassStr=}')
 
-        with open('OglClass.json', 'w') as f:
-            f.write(oglClassStr)
+        filePath: Path = Path(GENERATED_OGL_CLASS_FILENAME)
+        with filePath.open("w") as file:
+            file.write(oglClassStr)
+        # with open(GENERATED_OGL_CLASS_FILENAME, 'w') as f:
+        #     f.write(oglClassStr)
+
+        baseFileName: str = self._getFullyQualifiedTestFilePath(testFileName='Expected-OglClass.json')
+        status: int = self._runDiff(expectedContentsFileName=baseFileName, actualContentsFileName=GENERATED_OGL_CLASS_FILENAME)
+        self.assertEqual(0, status, 'Basic Ogl Class Encoding failed')
 
     def _generateBasicPyutClass(self) -> PyutClass:
 
