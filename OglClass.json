@@ -1,38 +1,45 @@
 {
     "graphicClass": {
-        "height": 60,
         "width": 120,
+        "height": 60,
         "x": 120,
         "y": 240
     },
     "modelClass": {
+        "name": "Ozzee",
+        "id": 23,
+        "stereotype": "model",
+        "fileName": "/tmp/TheBox.txt",
         "description": "Soy Gato",
-        "displayParameters": "Display",
+        "showMethods": true,
+        "showFields": false,
         "displayStereoType": true,
+        "displayParameters": "Display",
         "fields": [
             {
-                "defaultValue": "gato",
                 "name": "protectedField",
+                "visibility": "#",
                 "type": "str",
-                "visibility": "#"
+                "defaultValue": "gato"
             },
             {
-                "defaultValue": "6666",
                 "name": "privateField",
+                "visibility": "-",
                 "type": "int",
-                "visibility": "-"
+                "defaultValue": "6666"
             },
             {
-                "defaultValue": "23.0",
                 "name": "publicField",
+                "visibility": "+",
                 "type": "float",
-                "visibility": "+"
+                "defaultValue": "23.0"
             }
         ],
-        "fileName": "/tmp/TheBox.txt",
-        "id": 23,
         "methods": [
             {
+                "name": "publicMethod",
+                "visibility": "PUBLIC",
+                "returnType": "int",
                 "modifiers": [
                     {
                         "name": "abstract"
@@ -41,14 +48,51 @@
                         "name": "reentrant"
                     }
                 ],
-                "name": "publicMethod",
-                "returnType": "int",
-                "visibility": "+"
+                "parameters": [
+                    {
+                        "name": "noDefaultValueParam",
+                        "type": "str",
+                        "defaultValue": ""
+                    }
+                ],
+                "sourceCode": []
+            },
+            {
+                "name": "privateMethod",
+                "visibility": "PRIVATE",
+                "returnType": "str",
+                "modifiers": [
+                    {
+                        "name": "static"
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "noDefaultValueParam",
+                        "type": "str",
+                        "defaultValue": ""
+                    }
+                ],
+                "sourceCode": []
+            },
+            {
+                "name": "protectedMethodWithSourceCode",
+                "visibility": "PROTECTED",
+                "returnType": "",
+                "modifiers": [],
+                "parameters": [],
+                "sourceCode": [
+                    {
+                        "code": "i: int = 0"
+                    },
+                    {
+                        "code": "j: float = 0.0"
+                    },
+                    {
+                        "code": "k: str = \u2018Ozzee, El Gato Malo\u2019"
+                    }
+                ]
             }
-        ],
-        "name": "Ozzee",
-        "showFields": false,
-        "showMethods": true,
-        "stereotype": "model"
+        ]
     }
 }

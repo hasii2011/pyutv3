@@ -2,9 +2,10 @@
 <PyutProject version="7.0.0+.1309" CodePath="">
     <PyutDocument type="CLASS_DIAGRAM" title="Class Diagram" scrollPositionX="0" scrollPositionY="0" pixelsPerUnitX="72" pixelsPerUnitY="72">
         <GraphicClass width="321" height="125" x="475" y="158">
-            <Class id="24" name="JsonClass" stereotype="model" filename="" description="I am the class description" showMethods="True" showFields="True" showStereotype="True" displayParameters="Unspecified">
+            <Class id="1" name="JsonClass" stereotype="model" filename="" description="I am the class description" showMethods="True" showFields="True" showStereotype="True" displayParameters="Unspecified">
                 <Method name="publicMethod" visibility="PUBLIC">
-                    <Modifier name="abstract,static"/>
+                    <Modifier name="abstract"/>
+                    <Modifier name="static"/>
                     <Return type="int"/>
                     <Param name="intParam" type="int" defaultValue="1776"/>
                     <Param name="floatParam" type="float" defaultValue="42.0"/>
@@ -31,13 +32,13 @@
                     </SourceCode>
                 </Method>
                 <Field visibility="PROTECTED">
-                    <Param name="protectedField" type="str" defaultValue="gato"/>
+                    <Param name="protectedField" type="str"/>
                 </Field>
                 <Field visibility="PRIVATE">
-                    <Param name="privateField" type="int" defaultValue="0"/>
+                    <Param name="privateField" type="int"/>
                 </Field>
                 <Field visibility="PUBLIC">
-                    <Param name="publicField" type="float" defaultValue="23.0"/>
+                    <Param name="publicField" type="float"/>
                 </Field>
             </Class>
         </GraphicClass>

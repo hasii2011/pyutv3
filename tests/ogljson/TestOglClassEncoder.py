@@ -9,7 +9,9 @@ from pyutmodel.PyutDisplayParameters import PyutDisplayParameters
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutMethod import PyutModifiers
+from pyutmodel.PyutMethod import SourceCode
 from pyutmodel.PyutModifier import PyutModifier
+from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutStereotype import PyutStereotype
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
@@ -53,7 +55,7 @@ class TestOglClassEncoder(TestBase):
         oglClass.SetPosition(x=120, y=240)
 
         # Sort keys so we can verify them
-        oglClassStr = json.dumps(oglClass, cls=OglClassEncoder, indent=4, sort_keys=True)
+        oglClassStr = json.dumps(oglClass, cls=OglClassEncoder, indent=4, sort_keys=False)
         self.logger.info(f'{oglClassStr=}')
 
         with open('OglClass.json', 'w') as f:
@@ -94,10 +96,17 @@ class TestOglClassEncoder(TestBase):
 
     def _addMethods(self, pyutClass: PyutClass) -> PyutClass:
 
+        pyutClass = self._addPublicMethod(pyutClass)
+        pyutClass = self._addPrivateMethod(pyutClass)
+        pyutClass = self._addProtectedMethodWithSourceCode(pyutClass)
+
+        return pyutClass
+
+    def _addPublicMethod(self, pyutClass: PyutClass) -> PyutClass:
         publicMethod: PyutMethod = PyutMethod(name='publicMethod',
                                               visibility=PyutVisibilityEnum.PUBLIC,
                                               returnType=PyutType(value='int'))
-        publicMethod.setModifiers(
+        publicMethod.modifiers = (
             PyutModifiers(
                 [
                     PyutModifier('abstract'),
@@ -105,7 +114,43 @@ class TestOglClassEncoder(TestBase):
                 ]
             )
         )
+        publicMethod = self._addPublicMethodParameters(publicMethod)
         pyutClass.addMethod(publicMethod)
+        return pyutClass
+
+    def _addPublicMethodParameters(self, pyutMethod: PyutMethod) -> PyutMethod:
+        """
+        <Param name="noDefaultValueParam" type="str" defaultValue=""/>
+
+        """
+        pyutParameter: PyutParameter = PyutParameter(name='noDefaultValueParam', parameterType=PyutType('str'))
+        pyutMethod.addParameter(pyutParameter)
+        return pyutMethod
+
+    def _addPrivateMethod(self, pyutClass: PyutClass) -> PyutClass:
+        privateMethod: PyutMethod = PyutMethod(name='privateMethod',
+                                               visibility=PyutVisibilityEnum.PRIVATE,
+                                               returnType=PyutType(value='str'))
+        privateMethod.modifiers = (PyutModifiers([PyutModifier('static')]))
+
+        pyutParameter: PyutParameter = PyutParameter(name='noDefaultValueParam', parameterType=PyutType('str'))
+        privateMethod.addParameter(pyutParameter)
+
+        pyutClass.addMethod(privateMethod)
+        return pyutClass
+
+    def _addProtectedMethodWithSourceCode(self, pyutClass: PyutClass) -> PyutClass:
+        protectedMethodWithSourceCode: PyutMethod = PyutMethod(name='protectedMethodWithSourceCode', visibility=PyutVisibilityEnum.PROTECTED)
+
+        sourceCode: SourceCode = SourceCode(
+            [
+                'i: int = 0',
+                'j: float = 0.0',
+                'k: str = ‘Ozzee, El Gato Malo’'
+            ]
+        )
+        protectedMethodWithSourceCode.sourceCode = sourceCode
+        pyutClass.addMethod(protectedMethodWithSourceCode)
         return pyutClass
 
 
@@ -124,11 +169,12 @@ if __name__ == '__main__':
     unitTestMain()
 
 """
-                <Method name="privateMethod" visibility="PRIVATE">
-                    <Modifier name="static"/>
-                    <Return type="str"/>
-                    <Param name="noDefaultValueParam" type="str" defaultValue=""/>
-                    <SourceCode/>
-                </Method>
+                <Method name="methodWithSourceCode" visibility="PUBLIC">
+                    <Return type=""/>
+                    <SourceCode>
+                        <Code>i: int    = 0</Code>
+                        <Code>j: float = 0.0</Code>
+                        <Code>k: str   = ‘Ozzee, el gato malo’</Code>
+                    </SourceCode>
 
 """

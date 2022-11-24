@@ -17,18 +17,26 @@ from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutMethod import PyutModifiers
+from pyutmodel.PyutMethod import SourceCode
 from pyutmodel.PyutModifier import PyutModifier
+from pyutmodel.PyutParameter import PyutParameter
 
 EncodedGraphicClass = NewType('EncodedGraphicClass', Dict[str, int])
 
-EncodedField  = NewType('EncodedField', Dict[str, str])
+EncodedField  = NewType('EncodedField',  Dict[str, str])
 EncodedFields = NewType('EncodedFields', List[EncodedField])
 
-EncodedMethod  = NewType('EncodedMethod', Dict[str, str])
+EncodedMethod  = NewType('EncodedMethod',  Dict[str, str])
 EncodedMethods = NewType('EncodedMethods', List[EncodedMethod])
 
-EncodedModifier  = NewType('EncodedModifier', Dict[str, str])
+EncodedModifier  = NewType('EncodedModifier',   Dict[str, str])
 EncodedModifiers = NewType('EncodedModifiers', List[EncodedModifier])
+
+EncodedSourceLine = NewType('EncodedSourceLine', Dict[str, str])
+EncodedSourceCode = NewType('EncodedSourceCode', List[EncodedSourceLine])
+
+EncodedParameter  = NewType('EncodedParameter',  Dict[str, str])
+EncodedParameters = NewType('EncodedParameters', List[EncodedParameter])
 
 ModelValueTypes = Union[int, str, float, bool, EncodedFields]
 EncodedModel    = NewType('EncodedModel', Dict[str, ModelValueTypes])
@@ -138,13 +146,17 @@ class OglClassEncoder(JSONEncoder):
         return encodedMethods
 
     def _encodeMethod(self, pyutMethod: PyutMethod) -> EncodedMethod:
-        encodedModifiers: EncodedModifiers = self._encodeModifiers(pyutMethod.modifiers)
+        encodedModifiers:  EncodedModifiers  = self._encodeModifiers(pyutMethod.modifiers)
+        encodedParameters: EncodedParameters = self._encodeParameters(pyutMethod.parameters)
+        encodedSourceCode: EncodedSourceCode = self._encodeSourceCode(pyutMethod.sourceCode)
         return EncodedMethod(
             {
                 'name':       pyutMethod.name,
-                'visibility': pyutMethod.visibility.value,
+                'visibility': pyutMethod.visibility.name,
                 'returnType': pyutMethod.returnType.value,
-                'modifiers':  encodedModifiers
+                'modifiers':  encodedModifiers,
+                'parameters': encodedParameters,
+                'sourceCode': encodedSourceCode,
             }
         )
 
@@ -161,3 +173,40 @@ class OglClassEncoder(JSONEncoder):
         return EncodedModifier({
             'name': pyutModifier.name
         })
+
+    def _encodeParameters(self, pyutParameters: List[PyutParameter]) -> EncodedParameters:
+
+        encodedParameters: EncodedParameters = EncodedParameters([])
+        for parameter in pyutParameters:
+            encodedParameter: EncodedParameter = self._encodeParameter(parameter)
+            encodedParameters.append(encodedParameter)
+
+        return encodedParameters
+
+    def _encodeParameter(self, pyutParameter: PyutParameter) -> EncodedParameter:
+
+        return EncodedParameter(
+            {
+                'name':         pyutParameter.name,
+                'type':         self.__toSafeString(pyutParameter.type.value),
+                'defaultValue': self.__toSafeString(pyutParameter.defaultValue),
+            }
+        )
+
+    def _encodeSourceCode(self, sourceCode: SourceCode) -> EncodedSourceCode:
+        encodedSourceCode: EncodedSourceCode = EncodedSourceCode([])
+        for code in sourceCode:
+            encodedLine = self._encodeCodeLine(code)
+            encodedSourceCode.append(encodedLine)
+
+        return encodedSourceCode
+
+    def _encodeCodeLine(self, codeLine: str):
+        return EncodedSourceLine({
+            'code': codeLine
+        })
+
+    def __toSafeString(self, string) -> str:
+        if string is None:
+            string = ''
+        return string
