@@ -7,6 +7,9 @@ import json
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutDisplayParameters import PyutDisplayParameters
 from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutModifiers
+from pyutmodel.PyutModifier import PyutModifier
 from pyutmodel.PyutStereotype import PyutStereotype
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
@@ -44,6 +47,7 @@ class TestOglClassEncoder(TestBase):
 
         pyutClass: PyutClass = self._generateBasicPyutClass()
         pyutClass = self._addFields(pyutClass=pyutClass)
+        pyutClass = self._addMethods(pyutClass=pyutClass)
 
         oglClass:  OglClass = OglClass(pyutClass=pyutClass, w=120, h=60)
         oglClass.SetPosition(x=120, y=240)
@@ -88,6 +92,22 @@ class TestOglClassEncoder(TestBase):
 
         return pyutClass
 
+    def _addMethods(self, pyutClass: PyutClass) -> PyutClass:
+
+        publicMethod: PyutMethod = PyutMethod(name='publicMethod',
+                                              visibility=PyutVisibilityEnum.PUBLIC,
+                                              returnType=PyutType(value='int'))
+        publicMethod.setModifiers(
+            PyutModifiers(
+                [
+                    PyutModifier('abstract'),
+                    PyutModifier('reentrant')
+                ]
+            )
+        )
+        pyutClass.addMethod(publicMethod)
+        return pyutClass
+
 
 def suite() -> TestSuite:
     """You need to change the name of the test class here also."""
@@ -104,14 +124,11 @@ if __name__ == '__main__':
     unitTestMain()
 
 """
-                <Field visibility="PROTECTED">
-                    <Param name="protectedField" type="str" defaultValue="gato"/>
-                </Field>
-                <Field visibility="PRIVATE">
-                    <Param name="privateField" type="int" defaultValue="0"/>
-                </Field>
-                <Field visibility="PUBLIC">
-                    <Param name="publicField" type="float" defaultValue="23.0"/>
-                </Field>
+                <Method name="privateMethod" visibility="PRIVATE">
+                    <Modifier name="static"/>
+                    <Return type="str"/>
+                    <Param name="noDefaultValueParam" type="str" defaultValue=""/>
+                    <SourceCode/>
+                </Method>
 
 """

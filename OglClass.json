@@ -31,6 +31,21 @@
         ],
         "fileName": "/tmp/TheBox.txt",
         "id": 23,
+        "methods": [
+            {
+                "modifiers": [
+                    {
+                        "name": "abstract"
+                    },
+                    {
+                        "name": "reentrant"
+                    }
+                ],
+                "name": "publicMethod",
+                "returnType": "int",
+                "visibility": "+"
+            }
+        ],
         "name": "Ozzee",
         "showFields": false,
         "showMethods": true,

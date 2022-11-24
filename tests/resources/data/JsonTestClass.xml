@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <PyutProject version="7.0.0+.1309" CodePath="">
     <PyutDocument type="CLASS_DIAGRAM" title="Class Diagram" scrollPositionX="0" scrollPositionY="0" pixelsPerUnitX="72" pixelsPerUnitY="72">
-        <GraphicClass width="190" height="110" x="475" y="158">
-            <Class id="24" name="JsonClass" stereotype="model" filename="" description="" showMethods="True" showFields="True" showStereotype="True" displayParameters="Unspecified">
+        <GraphicClass width="321" height="125" x="475" y="158">
+            <Class id="24" name="JsonClass" stereotype="model" filename="" description="I am the class description" showMethods="True" showFields="True" showStereotype="True" displayParameters="Unspecified">
+                <Method name="publicMethod" visibility="PUBLIC">
+                    <Modifier name="abstract,static"/>
+                    <Return type="int"/>
+                    <Param name="intParam" type="int" defaultValue="1776"/>
+                    <Param name="floatParam" type="float" defaultValue="42.0"/>
+                    <SourceCode/>
+                </Method>
+                <Method name="privateMethod" visibility="PRIVATE">
+                    <Modifier name="static"/>
+                    <Return type="str"/>
+                    <Param name="noDefaultValueParam" type="str" defaultValue=""/>
+                    <SourceCode/>
+                </Method>
+                <Method name="protectedMethodNoReturnType" visibility="PROTECTED">
+                    <Modifier name="bogusModifier"/>
+                    <Return type=""/>
+                    <Param name="noTypeNoDefaultValueParam" type="" defaultValue=""/>
+                    <SourceCode/>
+                </Method>
+                <Method name="methodWithSourceCode" visibility="PUBLIC">
+                    <Return type=""/>
+                    <SourceCode>
+                        <Code>i: int    = 0</Code>
+                        <Code>j: float = 0.0</Code>
+                        <Code>k: str   = ‘Ozzee, el gato malo’</Code>
+                    </SourceCode>
+                </Method>
                 <Field visibility="PROTECTED">
                     <Param name="protectedField" type="str" defaultValue="gato"/>
                 </Field>

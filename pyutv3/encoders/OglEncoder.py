@@ -15,14 +15,23 @@ from ogl.OglObject import OglObject
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutModifiers
+from pyutmodel.PyutModifier import PyutModifier
 
 EncodedGraphicClass = NewType('EncodedGraphicClass', Dict[str, int])
 
 EncodedField  = NewType('EncodedField', Dict[str, str])
 EncodedFields = NewType('EncodedFields', List[EncodedField])
 
+EncodedMethod  = NewType('EncodedMethod', Dict[str, str])
+EncodedMethods = NewType('EncodedMethods', List[EncodedMethod])
+
+EncodedModifier  = NewType('EncodedModifier', Dict[str, str])
+EncodedModifiers = NewType('EncodedModifiers', List[EncodedModifier])
+
 ModelValueTypes = Union[int, str, float, bool, EncodedFields]
-EncodedModel = NewType('EncodedModel', Dict[str, ModelValueTypes])
+EncodedModel    = NewType('EncodedModel', Dict[str, ModelValueTypes])
 
 Serializable  = Union[OglObject, OglLink, OglInterface2]
 
@@ -67,22 +76,26 @@ class OglClassEncoder(JSONEncoder):
 
         Returns:  A nice model dictionary
         """
-        fieldList: EncodedFields = self._encodeClassFields(pyutClass.fields)
-        classDictionary: EncodedModel = EncodedModel (
+        encodedFields:  EncodedFields  = self._encodeClassFields(pyutClass.fields)
+        encodedMethods: EncodedMethods = self._encodeMethods(pyutClass.methods)
+
+        encodedModel: EncodedModel = EncodedModel (
             {
                 'name':              pyutClass.name,
                 'id':                pyutClass.id,
                 'stereotype':        pyutClass.stereotype.name,
                 'fileName':          pyutClass.fileName,
+
                 'description':       pyutClass.description,
                 'showMethods':       pyutClass.showMethods,
                 'showFields':        pyutClass.showFields,
                 'displayStereoType': pyutClass.displayStereoType,
                 'displayParameters': pyutClass.displayParameters.value,
-                'fields':            fieldList,
+                'fields':            encodedFields,
+                'methods':           encodedMethods,
             }
         )
-        return classDictionary
+        return encodedModel
 
     def _encodeClassFields(self, fields: List[PyutField]) -> EncodedFields:
         """
@@ -92,11 +105,11 @@ class OglClassEncoder(JSONEncoder):
 
         Returns:    A list of encoded data class model fields
         """
-        fieldList: EncodedFields = EncodedFields([])
+        encodedFields: EncodedFields = EncodedFields([])
         for field in fields:
-            fieldDictionary: EncodedField = self._encodeField(field=field)
-            fieldList.append(fieldDictionary)
-        return fieldList
+            encodedField: EncodedField = self._encodeField(field=field)
+            encodedFields.append(encodedField)
+        return encodedFields
 
     def _encodeField(self, field: PyutField) -> EncodedField:
         """
@@ -114,3 +127,37 @@ class OglClassEncoder(JSONEncoder):
                 'defaultValue': field.defaultValue
             }
         )
+
+    def _encodeMethods(self, pyutMethods: List[PyutMethod]):
+
+        encodedMethods: EncodedMethods = EncodedMethods([])
+        for method in pyutMethods:
+            encodedMethod: EncodedMethod = self._encodeMethod(method)
+            encodedMethods.append(encodedMethod)
+
+        return encodedMethods
+
+    def _encodeMethod(self, pyutMethod: PyutMethod) -> EncodedMethod:
+        encodedModifiers: EncodedModifiers = self._encodeModifiers(pyutMethod.modifiers)
+        return EncodedMethod(
+            {
+                'name':       pyutMethod.name,
+                'visibility': pyutMethod.visibility.value,
+                'returnType': pyutMethod.returnType.value,
+                'modifiers':  encodedModifiers
+            }
+        )
+
+    def _encodeModifiers(self, pyutModifiers: PyutModifiers) -> EncodedModifiers:
+        encodedModifiers: EncodedModifiers = EncodedModifiers([])
+
+        for modifier in pyutModifiers:
+            encodedModifier = self._encodeModifier(modifier)
+            encodedModifiers.append(encodedModifier)
+
+        return encodedModifiers
+
+    def _encodeModifier(self, pyutModifier: PyutModifier) -> EncodedModifier:
+        return EncodedModifier({
+            'name': pyutModifier.name
+        })
